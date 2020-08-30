@@ -21,13 +21,19 @@ class ComperSpider(scrapy.Spider):
 
         # Seleciona localidade desejada
         # O cookie é configurado nas próximas requisições para identificar a localidade
-        return [scrapy.Request(f'https://www.comperdelivery.com.br/Site/Track.aspx?{urlencode(params)}', headers=headers,
-                               callback=self.parse)]
+        return [scrapy.Request(
+            f'https://www.comperdelivery.com.br/Site/Track.aspx?{urlencode(params)}',
+            headers=headers,
+            callback=self.parse)]
 
     def parse(self, response):
         ''' Recupera a lista de categorias
         '''
-        yield scrapy.Request(response.urljoin('/api/catalog_system/pub/category/tree/3/'), headers=headers, callback=self.parse_category)
+        yield scrapy.Request(
+            response.urljoin('/api/catalog_system/pub/category/tree/3/'),
+            headers=headers,
+            callback=self.parse_category
+        )
 
     def parse_category(self, response):
         for category in response.json():
@@ -44,7 +50,9 @@ class ComperSpider(scrapy.Spider):
                 '_to': ComperSpider.LIMIT}
 
             yield scrapy.Request(
-                response.urljoin(f'/api/catalog_system/pub/products/search?{urlencode(params)}'), callback=self.parse_product,
+                response.urljoin(
+                    f'/api/catalog_system/pub/products/search?{urlencode(params)}'),
+                callback=self.parse_product,
                 cb_kwargs=params
             )
             break
@@ -73,8 +81,6 @@ class ComperSpider(scrapy.Spider):
             params = kwargs
             params['_from'] += ComperSpider.OFFSET
 
-            import pdb
-            pdb.set_trace()
             yield scrapy.Request(
                 response.urljoin(
                     f'/api/catalog_system/pub/products/search?{urlencode(params)}'),

@@ -1,5 +1,6 @@
 import scrapy
 from urllib.parse import urlencode
+from enum import Enum
 
 headers = {'User-Agent':
            'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.9 Safari/537.36',
@@ -7,15 +8,26 @@ headers = {'User-Agent':
            'Connection': 'keep-alive',
            'Referer': 'https://www.comperdelivery.com.br/'}
 
+class Location(Enum):
+    MT = '1'
+    MS = '2'
+    DF = '3'
+
 
 class ComperSpider(scrapy.Spider):
     name = 'comperspider'
     LIMIT = OFFSET = 31
 
+    def __init__(self, name=None, location='DF', **kwargs):
+        self.location=location
+        super().__init__(name=name, **kwargs)
+
     def start_requests(self):
+        if self.location not in [l.name for l in Location]:
+            raise scrapy.exceptions.CloseSpider('Localidade não encontrada.')
 
         params = {
-            'sc': '3',
+            'sc': f'{Location[self.location].value}',
             'referrer': 'https://www.comperdelivery.com.br/',
         }
 
@@ -55,7 +67,6 @@ class ComperSpider(scrapy.Spider):
                 callback=self.parse_product,
                 cb_kwargs=params
             )
-            break
 
     def parse_product(self, response, **kwargs):
 

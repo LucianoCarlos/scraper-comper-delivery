@@ -1,6 +1,6 @@
 ### Objetivo
 
-capturar dados do e-commerce [comper delivery](https://www.comperdelivery.com.br/).
+Capturar dados do e-commerce [comper delivery](https://www.comperdelivery.com.br/).
 
 ### Instalação e execução
 
@@ -11,15 +11,16 @@ capturar dados do e-commerce [comper delivery](https://www.comperdelivery.com.br
 
     O Scrapy é uma das bibliotecas de scraping mais populares e poderosas do Python, abaixo algumas das suas funcionalidades utilizadas:
 
-    - Um shell interativo para testar expressões CSS e XPath;
-    - Suporte integrado para gerar exportações no formato JSON;
+    - Um shell interativo para testar expressões CSS e XPath.
+    - Suporte integrado para gerar exportações no formato JSON.
     - Cache de requisições.
 
 3.  Execute o *scraper*.
-    <code>\$ scrapy runspider -o output.json -s CLOSESPIDER_PAGECOUNT=3 comper-spider.py</code>
+    <code>\$ scrapy runspider -o output.json -a location=DF -s CLOSESPIDER_PAGECOUNT=3 src/comper-spider.py </code>
 
-    - -o: especifica o arquivo de saída;
+    - -o: especifica o arquivo de saída.
     - CLOSESPIDER_PAGECOUNT: especifica o número máximo de respostas a rastrear, garante a coleta somente da primeira página de produtos.
+    - location: Seleciona a região: DF, MT e MS.
 
 4. Formato JSON
 ```json

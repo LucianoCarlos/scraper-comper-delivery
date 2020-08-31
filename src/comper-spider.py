@@ -8,6 +8,7 @@ headers = {'User-Agent':
            'Connection': 'keep-alive',
            'Referer': 'https://www.comperdelivery.com.br/'}
 
+
 class Location(Enum):
     MT = '1'
     MS = '2'
@@ -16,10 +17,10 @@ class Location(Enum):
 
 class ComperSpider(scrapy.Spider):
     name = 'comperspider'
-    LIMIT = OFFSET = 31
+    LIMIT = OFFSET = 32
 
     def __init__(self, name=None, location='DF', **kwargs):
-        self.location=location
+        self.location = location
         super().__init__(name=name, **kwargs)
 
     def start_requests(self):
@@ -59,7 +60,7 @@ class ComperSpider(scrapy.Spider):
                 'PageNumber': '1',
                 'O': 'OrderByScoreDESC',
                 '_from': 0,
-                '_to': ComperSpider.LIMIT}
+                '_to': ComperSpider.LIMIT - 1}
 
             yield scrapy.Request(
                 response.urljoin(
@@ -90,6 +91,7 @@ class ComperSpider(scrapy.Spider):
         # Segue paginação dos produtos
         if len(product_list):
             params = kwargs
+            params['_to'] += ComperSpider.OFFSET
             params['_from'] += ComperSpider.OFFSET
 
             yield scrapy.Request(
